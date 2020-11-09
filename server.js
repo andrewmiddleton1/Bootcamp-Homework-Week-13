@@ -28,6 +28,8 @@ connection.connect(function (err) {
 function start() {
     connection.query("SELECT * FROM employee", function (err, results) {
         if (err) throw err;
+        console.log(results);
+
         inquirer
             .prompt({
                 name: "initialchoice",
@@ -48,8 +50,8 @@ function start() {
                 //     viewAllEmployeesByManager();
                 // }
                 if (answer.initialchoice === "Add Employee") {
-                    postAuction();
-                    function postAuction() {
+                    addEmployee();
+                    function addEmployee() {
                         // prompt for info about the item being put up for auction
                         inquirer
                             .prompt([
@@ -67,7 +69,7 @@ function start() {
                                     name: "role",
                                     type: "list",
                                     choices: ["Salesperson", "Sales Lead", "Software Engineer", "Lead Engineer", "Accountant", "Lawyer", "Legal Team Lead"],
-                                    message: "Please choose a role"
+                                    message: "Please choose a number corresponding to the role"
                                 },
                                 {
                                     name: "manager",
@@ -83,12 +85,37 @@ function start() {
                                 }
                             ])
                             .then(function (answer) {
+
+                                switch (answer.role) {
+                                    case "Salesperson": "1";
+                                        break;
+
+                                    case "Sales Lead": "2";
+                                        break;
+
+                                    case "Software Engineer": "3";
+                                        break;
+
+                                    case "Lead Engineer": "4";
+                                        break;
+
+                                    case "Accountant": "5";
+                                        break;
+
+                                    case "Lawyer": "6";
+                                        break;
+
+                                    case "Legal Team Lead": "7";
+                                        break;
+
+                                }
                                 // when finished prompting, insert a new item into the db with that info
                                 connection.query(
                                     "INSERT INTO employee SET ?",
                                     {
                                         first_name: answer.firstName,
-                                        second_name: answer.secondName
+                                        last_name: answer.secondName,
+                                        role_id: answer.role
 
                                     },
                                     function (err) {

@@ -26,10 +26,19 @@ CREATE TABLE employee (
   CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id)
 );
 
-INSERT INTO employee (id) VALUES ("1");
-INSERT INTO employee (role_id) VALUES ("1");
-INSERT INTO employee (first_name) VALUES ("John");
-INSERT INTO employee (last_name) VALUES ("Smith");
-INSERT INTO role (title) VALUES ("Engineer");
-INSERT INTO role (salary) VALUES ("120000");
+
+INSERT INTO role (title, salary) VALUES ("Salesperson", "60000");
+INSERT INTO department (name) VALUES ("Sales");
+INSERT INTO employee (first_name, last_name, role_id) VALUES ("John", "Smith", 1);
+INSERT INTO role (title, salary) VALUES ("Sales Lead", "80000");
+INSERT INTO department (name) VALUES ("Sales");
+INSERT INTO role (title, salary) VALUES ("Software Engineer", "90000");
+INSERT INTO department (name) VALUES ("IT");
+INSERT INTO role (title, salary) VALUES ("Lead Engineer", "150000");
 INSERT INTO department (name) VALUES ("Engineering");
+INSERT INTO role (title, salary) VALUES ("Accountant", "100000");
+INSERT INTO department (name) VALUES ("Administration");
+INSERT INTO role (title, salary) VALUES ("Lawyer", "90000");
+INSERT INTO department (name) VALUES ("Legal");
+INSERT INTO role (title, salary) VALUES ("Legal Team Lead", "150000");
+INSERT INTO department (name) VALUES ("Legal");
