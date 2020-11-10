@@ -40,12 +40,69 @@ function start() {
             .then(function (answer) {
                 // based on their answer, either call the bid or the post functions
                 console.log(answer);
-                // if (answer.initialchoice === "View all employees") {
-                //     viewAllEmployees();
-                // }
-                // else if (answer.initialchoice === "View all employees by Department") {
-                //     viewAllEmployeesByDepartment();
-                // }
+                if (answer.initialchoice === "View all employees") {
+                    viewAllEmployees();
+                    function viewAllEmployees() {
+                        console.table(results)
+
+
+                    }
+                }
+                else if (answer.initialchoice === "View all employees by Department") {
+                    viewAllEmployeesByDepartment();
+                    function viewAllEmployeesByDepartment() {
+                        connection.query("SELECT * FROM department", function (err, results) {
+                            if (err) throw err;
+                            inquirer
+                                .prompt([
+
+                                    {
+                                        name: "department",
+                                        type: "list",
+                                        choices: function () {
+
+                                            return results.map((department) => ({
+                                                name: department.name,
+                                                value: department.id
+
+                                            }));
+
+                                        },
+
+
+                                        message: "Please select the department you wish to view"
+                                    }
+                                ])
+                                .then(function (answer) {
+                                    var query = "SELECT employee.first_name, employee.last_name, employee.role_id, employee.manager_id, role.name, role.salary";
+                                    query += "FROM employee INNER JOIN role INNER JOIN department ON (employee.role_id = role.id AND role.department_id = department.id) WHERE (department.name = ?) ORDER BY employee.last_name";
+
+                                    connection.query(query, [answer.department], function (err, res) {
+                                        console.log(res.length + " matches found!");
+                                        // for (var i = 0; i < res.length; i++) {
+                                        //     console.log(
+                                        //         i + 1 + ".) " +
+                                        //         "Employee First Name: " +
+                                        //         res[i].employee.first_name +
+                                        //         " Employee Last Name: " +
+                                        //         res[i].employee.last_name +
+                                        //         " || Employee Role ID: " +
+                                        //         res[i].employee.id +
+                                        //         " || Employee Manager ID: " +
+                                        //         res[i].employee.manager_id +
+                                        //         " || Employee Role Name: " +
+                                        //         res[i].role.name +
+                                        //         " || Employee Salary: " +
+                                        //         res[i].role.salary
+                                        //     );
+                                        // }
+
+
+                                    });
+                                });
+                        });
+                    }
+                }
                 // else if (answer.initialchoice === "View all employees by Manager") {
                 //     viewAllEmployeesByManager();
                 // }
@@ -68,54 +125,66 @@ function start() {
                                 {
                                     name: "role",
                                     type: "list",
-                                    choices: ["Salesperson", "Sales Lead", "Software Engineer", "Lead Engineer", "Accountant", "Lawyer", "Legal Team Lead"],
-                                    message: "Please choose a number corresponding to the role"
+                                    choices: [
+                                        {
+                                            name: "Salesperson",
+                                            value: 1,
+                                        },
+                                        {
+                                            name: "Sales Lead",
+                                            value: 2
+                                        },
+                                        {
+                                            name: "Software Engineer",
+                                            value: 3,
+                                        },
+                                        {
+                                            name: "Lead Engineer",
+                                            value: 4,
+                                        },
+                                        {
+                                            name: "Accountant",
+                                            value: 5,
+                                        },
+                                        {
+                                            name: "Lawyer",
+                                            value: 6,
+                                        },
+                                        {
+                                            name: "Legal Team Lead",
+                                            value: 7,
+
+                                        },
+                                    ],
+                                    message: "Please choose a role"
                                 },
                                 {
                                     name: "manager",
-                                    type: "rawlist",
+                                    type: "list",
                                     choices: function () {
-                                        var managerArray = [];
-                                        for (var i = 0; i < results.length; i++) {
-                                            managerArray.push(results[i].last_name);
-                                        }
-                                        return managerArray;
+
+                                        return results.map((manager) => ({
+                                            name: manager.last_name,
+                                            value: manager.id
+                                        }))
+                                        // var managerArray = [];
+                                        // for (var i = 0; i < results.length; i++) {
+                                        //     managerArray.push(results[i].last_name);
                                     },
+
+
                                     message: "Please enter the employee's manager"
                                 }
                             ])
                             .then(function (answer) {
-
-                                switch (answer.role) {
-                                    case "Salesperson": "1";
-                                        break;
-
-                                    case "Sales Lead": "2";
-                                        break;
-
-                                    case "Software Engineer": "3";
-                                        break;
-
-                                    case "Lead Engineer": "4";
-                                        break;
-
-                                    case "Accountant": "5";
-                                        break;
-
-                                    case "Lawyer": "6";
-                                        break;
-
-                                    case "Legal Team Lead": "7";
-                                        break;
-
-                                }
                                 // when finished prompting, insert a new item into the db with that info
                                 connection.query(
                                     "INSERT INTO employee SET ?",
                                     {
                                         first_name: answer.firstName,
                                         last_name: answer.secondName,
-                                        role_id: answer.role
+                                        role_id: answer.role,
+                                        manager_id: answer.manager
 
                                     },
                                     function (err) {
