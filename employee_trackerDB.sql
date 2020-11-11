@@ -27,11 +27,11 @@ CREATE TABLE employee (
 );
 
 
-INSERT INTO role (title, salary) VALUES ("Salesperson", "60000");
-INSERT INTO department (name) VALUES ("Sales");
-INSERT INTO employee (first_name, last_name, role_id) VALUES ("John", "Smith", 1);
-INSERT INTO role (title, salary) VALUES ("Sales Lead", "80000");
-INSERT INTO department (name) VALUES ("Sales");
+
+INSERT INTO department (name, id) VALUES ("Sales", 1);
+INSERT INTO role (title, salary, department_id) VALUES ("Sales Lead", "80000", 1);
+INSERT INTO employee (first_name, last_name, role_id) VALUES ("Joe", "Biden", 1);
+INSERT INTO role (title, salary, department_id) VALUES ("Salesperson", "60000", 1);
 INSERT INTO role (title, salary) VALUES ("Software Engineer", "90000");
 INSERT INTO department (name) VALUES ("IT");
 INSERT INTO role (title, salary) VALUES ("Lead Engineer", "150000");
@@ -41,4 +41,7 @@ INSERT INTO department (name) VALUES ("Administration");
 INSERT INTO role (title, salary) VALUES ("Lawyer", "90000");
 INSERT INTO department (name) VALUES ("Legal");
 INSERT INTO role (title, salary) VALUES ("Legal Team Lead", "150000");
-INSERT INTO department (name) VALUES ("Legal");
+
+
+
+
