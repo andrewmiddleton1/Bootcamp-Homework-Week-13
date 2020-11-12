@@ -279,7 +279,7 @@ function start() {
                         inquirer
                             .prompt([
                                 {
-                                    name: "secondName",
+                                    name: "secondNameUpdateRole",
                                     type: "list",
                                     choices: function () {
 
@@ -292,48 +292,143 @@ function start() {
                                     message: "Please enter the employee's last name"
                                 },
                                 {
-                                    name: "updatedRole",
+                                    name: "newrole",
                                     type: "list",
-                                    choices: function () {
-                                        connection.query("SELECT * FROM role", function (err, results) {
-                                            if (err) throw err;
-                                            console.log(results);
-                                            console.log(results.title);
+                                    choices: [
+                                        {
+                                            name: "Salesperson",
+                                            value: 1,
+                                        },
+                                        {
+                                            name: "Sales Lead",
+                                            value: 2
+                                        },
+                                        {
+                                            name: "Software Engineer",
+                                            value: 3,
+                                        },
+                                        {
+                                            name: "Lead Engineer",
+                                            value: 4,
+                                        },
+                                        {
+                                            name: "Accountant",
+                                            value: 5,
+                                        },
+                                        {
+                                            name: "Lawyer",
+                                            value: 6,
+                                        },
+                                        {
+                                            name: "Legal Team Lead",
+                                            value: 7,
 
-
-                                        });
-
-                                        return results.map((role) => ({
-                                            name: role.title
-
-                                        }))
-                                    },
-                                    message: "Please enter the employee's new role"
-                                }
-
+                                        },
+                                    ],
+                                    message: "Please choose their NEW role"
+                                },
                             ])
                             .then(function (answer) {
-                                console.log(answer.updateRole);
-                                // var query = "SELECT employee.role_id FROM employee WHERE (employee.last_name = ?) ORDER BY employee.last_name";
+                                connection.query(
+                                    "UPDATE employee SET ? WHERE ?",
+                                    [
+                                        {
+                                            role_id: answer.newrole
+                                        },
+                                        {
+                                            last_name: answer.secondNameUpdateRole
+                                        }
+                                    ],
+                                    function (error) {
+                                        if (error) throw err;
+                                        console.log("Role successfully update!");
+                                        start();
+                                    }
+                                );
 
-                                // //console.log(query);
-                                // //console.log(answer.department);
-
-                                // connection.query(query, [answer.secondName], function (err, res) {
-                                //     console.log("You successfully deleted: " + answer.secondName);
-                                //     start();
 
                             });
 
 
+
                     };
-
-
                 }
 
+                else if (answer.initialchoice === "Update Employee Manager") {
+                    updateEmployeeManager();
+                    function updateEmployeeManager() {
+                        inquirer
+                            .prompt([
+                                {
+                                    name: "secondNameUpdateManager",
+                                    type: "list",
+                                    choices: function () {
+
+                                        return results.map((employee) => ({
+                                            name: employee.last_name
+
+                                        }))
+
+                                    },
+                                    message: "Please enter the employee's last name"
+                                },
+                                {
+                                    name: "newManager",
+                                    type: "list",
+                                    choices: function () {
+
+                                        return results.map((manager) => ({
+                                            name: manager.last_name,
+                                            value: manager.id
+                                        }))
+                                        // var managerArray = [];
+                                        // for (var i = 0; i < results.length; i++) {
+                                        //     managerArray.push(results[i].last_name);
+                                    },
+
+
+                                    message: "Please enter the employee's NEW manager"
+                                }
+                            ])
+                            .then(function (answer) {
+                                console.log(answer.newManger);
+                                console.log(answer.secondNameUpdateManager);
+                                connection.query(
+                                    "UPDATE employee SET ? WHERE ?",
+                                    [
+                                        {
+                                            manager_id: answer.newManger
+                                        },
+                                        {
+                                            last_name: answer.secondNameUpdateManager
+                                        }
+                                    ],
+                                    function (error) {
+                                        if (error) throw err;
+                                        console.log("Manager successfully update!");
+                                        start();
+                                    }
+                                );
+
+                                //console.log("Your employee role was successfully updated! ");
+                                // function (err) {
+                                //     if (err) throw err;
+                                //     console.log("Your entry was created successfully!");
+                                //     // re-prompt the user for if they want to bid or post
+                                //     start();
+                                // };
+
+                            });
+
+
+
+                    };
+                }
+
+
+
+
             });
-
-
 
 
     });
@@ -341,9 +436,13 @@ function start() {
 
 
 
-    // else if (answer.initialchoice === "Update Employee Role") {
-    //     updateEmployeeRole();
-    // }
+
+
+
+
+
+
+
     // else if (answer.initialchoice === "Update Employee Manager") {
     //     updateEmployeeManager();
     // }

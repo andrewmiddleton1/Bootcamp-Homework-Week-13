@@ -43,5 +43,5 @@ INSERT INTO department (name) VALUES ("Legal");
 INSERT INTO role (title, salary) VALUES ("Legal Team Lead", "150000");
 
 
-
+SELECT role_id FROM employee WHERE (lastname = biden); REPLACE INTO employee (role_id) VALUES (4);
 
